@@ -22,7 +22,7 @@ It demonstrate a simple server that serve user withdraw money from the bank.
 3.  If widthdraw is ok, calculate remain balance then update to DB.
 
 
-So based on this example, The maximum times user can widthdraw is 20 times ( 20 X 50$ = 1000$ ), If user can widthraw over 20 times, our system get fraud :(
+So based on this example, The maximum times user can widthdraw is 20 times ( 20 X 50$ = 1000$ ), If user can widthraw over 20 times, our system get fraud.
 
 Usually, If every request is sequence, the fraud will not happend. However, if there are many requests happend at the same time ( over 20 requests ), The fraud will happend if we use basic code.
 

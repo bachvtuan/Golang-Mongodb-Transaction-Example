@@ -65,9 +65,7 @@ func main() {
   fmt.Printf("Session is %p\n", session)
   global_db = session.DB( "db_log" )
 
-
-
-  //make sure if is empty first
+  //make sure it is empty first
   global_db.C("bank").DropCollection()
 
   //Init amount is 1000 USD
