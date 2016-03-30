@@ -78,8 +78,10 @@ _**Safe code:**_
 I can withdraw 20 times, Remain requests will be shown "out_of_balance". I watched the console log and see the result as expected.
 
 _**Queue method:**_
-I generated 10 accounts, each account has 1000USD. The the maxinum successful withdraw times are 200 ( 20/user * 10 ). I watched the console log and see the result as expected too.
+I generated 100 accounts, each account has 1000USD. The the maxinum successful withdraw times are 200 ( 20/user * 10 ). I watched the console log and see the result as epxectation too.
 
+_**Multiple Queue method:**_
+The same behaviour with Queue method but There are 10 queues are listening. The response result is as my epxectation but taken time is brilliant fast.( This method is fastest in 4 methods  ).
 
 ## Benmarch log
 
