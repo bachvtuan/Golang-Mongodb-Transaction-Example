@@ -46,9 +46,9 @@ ab -n <num_requests> -c <concurrency> <addr>:<port><path>
 Example usage:
 
 ```
-ab -n 500 -c 100 http://localhost:8000/
+ab -n 5000 -c 1000 http://localhost:8000/
 ```
-I want to create 500 requests and there are 100 requests happend at the same time.
+I want to create 5000 requests and there are 1000 requests happend at the same time.
 
 ## Alternative method:
 
@@ -72,177 +72,153 @@ I have 100 users and there are 10( Q ) queues are listening are numbered from 0 
 ## Result :
 
 _**Unsafe code:**_
-I can withdraw 500 times without any error, so actuall the money I will get is 500 * 50 = 25000USD meanwhile previous my balance is 1000USD.
+I can withdraw 1653 times without any error, so actuall the money I will get is 1653 * 50 = 82650USD. This is serious problem because my previous balance only 1000USD.
 
 _**Safe code:**_
-I can withdraw 20 times, Remain requests will be shown "out_of_balance". I watched the console log and see the result as expected.
+I can withdraw 20 times, Remain requests will be shown "out_of_balance". I watched the console log and see the result as expected ( Good job ).
 
 _**Queue method:**_
-I generated 100 accounts, each account has 1000USD. The the maxinum successful withdraw times are 200 ( 20/user * 10 ). I watched the console log and see the result as epxectation too.
+Unlike above methods, we should simulate multiple users for system to test the result don't messed between users. I generated 100 accounts, each account has 1000USD. The the maxinum successful withdraw times are 2000 ( 20/user * 100 ). I watched the console log and see the result as epxectation too.
 
 _**Multiple Queue method:**_
-The same behaviour with Queue method but There are 10 queues are listening. The response result is as my epxectation but taken time is brilliant fast.( This method is fastest in 4 methods  ).
+The same behaviour with Queue method but There are 10 queues are listening. But countWidthdraw is incorrect with value is 2056 or some value around here. Will be investigate
+
 
 ## Benmarch log
 
 **_Unsafe code:_**
 ```
-Server Software:        
-Server Hostname:        localhost
-Server Port:            8000
-
-Document Path:          /
-Document Length:        17 bytes
-
-Concurrency Level:      100
-Time taken for tests:   0.092 seconds
-Complete requests:      500
-Failed requests:        0
-Total transferred:      67000 bytes
-HTML transferred:       8500 bytes
-Requests per second:    5408.21 [#/sec] (mean)
-Time per request:       18.490 [ms] (mean)
-Time per request:       0.185 [ms] (mean, across all concurrent requests)
-Transfer rate:          707.72 [Kbytes/sec] received
+Concurrency Level:      1000
+Time taken for tests:   0.599 seconds
+Complete requests:      5000
+Failed requests:        3711
+   (Connect: 0, Receive: 0, Length: 3711, Exceptions: 0)
+Total transferred:      638243 bytes
+HTML transferred:       54532 bytes
+Requests per second:    8341.29 [#/sec] (mean)
+Time per request:       119.886 [ms] (mean)
+Time per request:       0.120 [ms] (mean, across all concurrent requests)
+Transfer rate:          1039.80 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    1   1.7      0       6
-Processing:     3   16   8.2     15      50
-Waiting:        3   16   8.2     15      50
-Total:          3   17   8.6     16      52
+Connect:        0    1   5.4      0      32
+Processing:     0   18  12.7     16     227
+Waiting:        0   18  12.7     15     227
+Total:          0   19  13.9     16     251
 
 Percentage of the requests served within a certain time (ms)
   50%     16
-  66%     19
-  75%     21
-  80%     22
-  90%     28
-  95%     36
-  98%     44
-  99%     45
- 100%     52 (longest request)
+  66%     21
+  75%     24
+  80%     27
+  90%     39
+  95%     47
+  98%     55
+  99%     58
+ 100%    251 (longest request)
 ```
 
 **_Safe code:_**
 
 ```
-Server Software:        
-Server Hostname:        localhost
-Server Port:            8000
-
-Document Path:          /
-Document Length:        14 bytes
-
-Concurrency Level:      100
-Time taken for tests:   0.164 seconds
-Complete requests:      500
-Failed requests:        0
-Total transferred:      65500 bytes
-HTML transferred:       7000 bytes
-Requests per second:    3047.67 [#/sec] (mean)
-Time per request:       32.812 [ms] (mean)
-Time per request:       0.328 [ms] (mean, across all concurrent requests)
-Transfer rate:          389.89 [Kbytes/sec] received
+Concurrency Level:      1000
+Time taken for tests:   1.300 seconds
+Complete requests:      5000
+Failed requests:        4980
+   (Connect: 0, Receive: 0, Length: 4980, Exceptions: 0)
+Total transferred:      654740 bytes
+HTML transferred:       69760 bytes
+Requests per second:    3847.42 [#/sec] (mean)
+Time per request:       259.914 [ms] (mean)
+Time per request:       0.260 [ms] (mean, across all concurrent requests)
+Transfer rate:          492.00 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    1   1.6      0       5
-Processing:     0   29  13.4     29      93
-Waiting:        0   29  13.4     29      93
-Total:          0   30  13.6     29      97
+Connect:        0   67 248.3      0    1001
+Processing:     0   51  42.8     43     284
+Waiting:        0   51  42.8     43     284
+Total:          0  118 276.3     43    1285
 
 Percentage of the requests served within a certain time (ms)
-  50%     29
-  66%     30
-  75%     33
-  80%     35
-  90%     46
-  95%     54
-  98%     65
-  99%     80
- 100%     97 (longest request)
+  50%     43
+  66%     47
+  75%     57
+  80%     76
+  90%     87
+  95%   1065
+  98%   1246
+  99%   1267
+ 100%   1285 (longest request)
 ```
 
 **_Queue method code:_**
 ```
-Server Software:        
-Server Hostname:        localhost
-Server Port:            8000
-
-Document Path:          /
-Document Length:        16 bytes
-
-Concurrency Level:      100
-Time taken for tests:   0.227 seconds
-Complete requests:      500
-Failed requests:        491
-   (Connect: 0, Receive: 0, Length: 491, Exceptions: 0)
-Total transferred:      67392 bytes
-HTML transferred:       8892 bytes
-Requests per second:    2198.23 [#/sec] (mean)
-Time per request:       45.491 [ms] (mean)
-Time per request:       0.455 [ms] (mean, across all concurrent requests)
-Transfer rate:          289.34 [Kbytes/sec] received
+Concurrency Level:      1000
+Time taken for tests:   1.439 seconds
+Complete requests:      5000
+Failed requests:        4991
+   (Connect: 0, Receive: 0, Length: 4991, Exceptions: 0)
+Total transferred:      663893 bytes
+HTML transferred:       78893 bytes
+Requests per second:    3475.43 [#/sec] (mean)
+Time per request:       287.734 [ms] (mean)
+Time per request:       0.288 [ms] (mean, across all concurrent requests)
+Transfer rate:          450.65 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    0   0.9      0       3
-Processing:     2   41   8.7     41      61
-Waiting:        2   41   8.7     41      61
-Total:          5   41   8.2     41      62
+Connect:        0   79 268.1      0    1004
+Processing:     4   97  33.5     95     323
+Waiting:        4   97  33.5     95     323
+Total:         31  177 275.4     98    1326
 
 Percentage of the requests served within a certain time (ms)
-  50%     41
-  66%     44
-  75%     46
-  80%     47
-  90%     48
-  95%     50
-  98%     56
-  99%     58
- 100%     62 (longest request)
+  50%     98
+  66%    114
+  75%    125
+  80%    126
+  90%    134
+  95%   1087
+  98%   1132
+  99%   1143
+ 100%   1326 (longest request)
 
 ```
 
 **_Multiple Queue method code:_**
 ```
-Server Software:        
-Server Hostname:        localhost
-Server Port:            8000
-
-Document Path:          /
-Document Length:        16 bytes
-
-Concurrency Level:      100
-Time taken for tests:   0.114 seconds
-Complete requests:      500
-Failed requests:        491
-   (Connect: 0, Receive: 0, Length: 491, Exceptions: 0)
-Total transferred:      67393 bytes
-HTML transferred:       8893 bytes
-Requests per second:    4392.63 [#/sec] (mean)
-Time per request:       22.765 [ms] (mean)
-Time per request:       0.228 [ms] (mean, across all concurrent requests)
-Transfer rate:          578.19 [Kbytes/sec] received
+Concurrency Level:      1000
+Time taken for tests:   0.604 seconds
+Complete requests:      5000
+Failed requests:        4991
+   (Connect: 0, Receive: 0, Length: 4991, Exceptions: 0)
+Total transferred:      664353 bytes
+HTML transferred:       79353 bytes
+Requests per second:    8281.00 [#/sec] (mean)
+Time per request:       120.758 [ms] (mean)
+Time per request:       0.121 [ms] (mean, across all concurrent requests)
+Transfer rate:          1074.51 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    1   1.3      0       5
-Processing:     2   20  10.3     18      57
-Waiting:        2   20  10.3     18      57
-Total:          2   21  10.6     19      59
+Connect:        0    1   5.0      0      31
+Processing:     0   21  14.1     18     236
+Waiting:        0   21  14.1     18     236
+Total:          0   22  15.6     18     256
 
 Percentage of the requests served within a certain time (ms)
-  50%     19
-  66%     24
-  75%     28
-  80%     30
-  90%     35
-  95%     39
-  98%     45
-  99%     49
- 100%     59 (longest request)
+  50%     18
+  66%     27
+  75%     32
+  80%     35
+  90%     42
+  95%     50
+  98%     60
+  99%     65
+ 100%    256 (longest request)
+
 ```
 
 ## References:

@@ -56,7 +56,7 @@ func withdraw(w http.ResponseWriter, r *http.Request) {
       case result := <- out:
 
         if result.Account == account{
-          fmt.Printf("Result %s\n", result.Result)
+          fmt.Printf("Result %s and countWithdraw is %d\n", result.Result, countWithdraw)
           io.WriteString(w, result.Result)
           wg.Done()
           //should return, otherwise it's still pop out value from out channel

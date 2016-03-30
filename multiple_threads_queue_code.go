@@ -2,7 +2,7 @@ package main
 
 import (
   "strconv"
- "io"
+  "io"
   "net/http"
   "fmt"
   "gopkg.in/mgo.v2"
@@ -13,6 +13,8 @@ import (
 )
 
 var global_db *mgo.Database
+
+var mu = &sync.Mutex{}
 
 //Get random number from range [ min, max ]
 func Random(min, max int) int {
@@ -29,7 +31,7 @@ type Currency struct {
 }
 
 var countWithdraw = 0
-var maxUser = 100
+var maxUser = 10
 var maxThread = 10
 
 //Array of channels input and output
@@ -68,6 +70,7 @@ func withdraw(w http.ResponseWriter, r *http.Request) {
         if result.Account == account{
           /*fmt.Printf("Result %s\n", result.Result)
           fmt.Printf("Number is %d \n", channelNumber )*/
+          fmt.Printf("Result %s and countWithdraw is %d\n", result.Result, countWithdraw)
           io.WriteString(w, result.Result)
           wg.Done()
           //should return, otherwise it's still pop out value from out channel
@@ -158,8 +161,14 @@ func main() {
                 //panic("update error")
                 out[ index ] <-  Result{ Account: account, Result: "update error"}
               }
-              countWithdraw += 1
+              
+              mu.Lock()
+              countWithdraw = countWithdraw + 1
+              
               fmt.Printf("countWithdraw %d\n", countWithdraw)
+              
+              mu.Unlock()
+
               out[ index ] <-  Result{ Account: account, Result: fmt.Sprintf("countWithdraw %d\n", countWithdraw)}
             }
         }

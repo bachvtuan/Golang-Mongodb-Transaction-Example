@@ -41,7 +41,7 @@ func withdraw(w http.ResponseWriter, r *http.Request) {
   fmt.Printf("%+v\n", entry)
   //step 2: check if balance is valid to widthdraw
   if entry.Amount < 50.00 {
-    fmt.Printf("out_of_balance\n")
+    fmt.Printf("out_of_balance %d\n", count_withdraw)
     io.WriteString(w, "out_of_balance")
     return
   }
