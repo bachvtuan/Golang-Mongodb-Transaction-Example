@@ -66,7 +66,6 @@ _**Safe code:**_
 I can withdraw 20 times, Remain requests will be shown "out_of_balance". I watched the console log and see the result as expected.
 
 _**Queue method:**_
-
 I generated 10 accounts, each account has 1000USD. The the maxinum successful withdraw times are 200 ( 20/user * 10 ). I watched the console log and see the result as expected too.
 
 
