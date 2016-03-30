@@ -57,7 +57,7 @@ This method can be applied for other programming language. The idea is we should
 Each payment is processed one by one.Take a look at queue_code.go. I have implemented 2 channels. The first one is input channel and other one is output channel.
 
 
-**Result :**
+## Result :
 
 _**Unsafe code:**_
 I can withdraw 500 times without any error, so actuall the money I will get is 500 * 50 = 25000USD meanwhile previous my balance is 1000USD.
