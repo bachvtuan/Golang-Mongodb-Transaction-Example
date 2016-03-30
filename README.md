@@ -52,9 +52,21 @@ I want to create 500 requests and there are 100 requests happend at the same tim
 
 ## Alternative method:
 
+### Queue ( queue_code.go )
 This method can be applied for other programming language. The idea is we should implement queue for it.
 
 Each payment is processed one by one.Take a look at queue_code.go. I have implemented 2 channels. The first one is input channel and other one is output channel.
+
+### Concurrency queue ( multiple_threads_queue_code.go )
+By using above method, I use single queue, and now let expland by using multiple queue will make server response faster. To do this, I generated N users in system. Each user need belong only 1 queue by your rule.
+
+**For example:**
+
+I have 100 users and there are 10( Q ) queues are listening are numbered from 0 -> 9( 10 -1 ). If user X ( 0-> 99 ) want to withdraw I calculate what queue it should be used. My rule is simple by get modulo of X by  Q.
+
++ X = 52, Q = 10 -> The queue should be process for this request is 52 % 10 = 2 ( third queue )
++ X = 20, Q = 10 -> The queue should be process for this request is 20 % 10 = 0 ( first queue )
+
 
 
 ## Result :
@@ -160,36 +172,76 @@ Document Path:          /
 Document Length:        16 bytes
 
 Concurrency Level:      100
-Time taken for tests:   0.172 seconds
+Time taken for tests:   0.227 seconds
 Complete requests:      500
 Failed requests:        491
    (Connect: 0, Receive: 0, Length: 491, Exceptions: 0)
-Total transferred:      66192 bytes
-HTML transferred:       7692 bytes
-Requests per second:    2910.68 [#/sec] (mean)
-Time per request:       34.356 [ms] (mean)
-Time per request:       0.344 [ms] (mean, across all concurrent requests)
-Transfer rate:          376.30 [Kbytes/sec] received
+Total transferred:      67392 bytes
+HTML transferred:       8892 bytes
+Requests per second:    2198.23 [#/sec] (mean)
+Time per request:       45.491 [ms] (mean)
+Time per request:       0.455 [ms] (mean, across all concurrent requests)
+Transfer rate:          289.34 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    1   1.6      0       6
-Processing:     4   31  14.5     29      71
-Waiting:        4   31  14.5     29      71
-Total:         10   32  15.2     30      73
+Connect:        0    0   0.9      0       3
+Processing:     2   41   8.7     41      61
+Waiting:        2   41   8.7     41      61
+Total:          5   41   8.2     41      62
 
 Percentage of the requests served within a certain time (ms)
-  50%     30
-  66%     35
-  75%     36
-  80%     44
-  90%     59
-  95%     65
-  98%     69
-  99%     71
- 100%     73 (longest request)
+  50%     41
+  66%     44
+  75%     46
+  80%     47
+  90%     48
+  95%     50
+  98%     56
+  99%     58
+ 100%     62 (longest request)
+
 ```
 
+**_Multiple Queue method code:_**
+```
+Server Software:        
+Server Hostname:        localhost
+Server Port:            8000
+
+Document Path:          /
+Document Length:        16 bytes
+
+Concurrency Level:      100
+Time taken for tests:   0.114 seconds
+Complete requests:      500
+Failed requests:        491
+   (Connect: 0, Receive: 0, Length: 491, Exceptions: 0)
+Total transferred:      67393 bytes
+HTML transferred:       8893 bytes
+Requests per second:    4392.63 [#/sec] (mean)
+Time per request:       22.765 [ms] (mean)
+Time per request:       0.228 [ms] (mean, across all concurrent requests)
+Transfer rate:          578.19 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   1.3      0       5
+Processing:     2   20  10.3     18      57
+Waiting:        2   20  10.3     18      57
+Total:          2   21  10.6     19      59
+
+Percentage of the requests served within a certain time (ms)
+  50%     19
+  66%     24
+  75%     28
+  80%     30
+  90%     35
+  95%     39
+  98%     45
+  99%     49
+ 100%     59 (longest request)
+```
 
 ## References:
 

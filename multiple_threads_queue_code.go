@@ -155,7 +155,7 @@ func main() {
               err = global_db.C("bank").UpdateId(entry.Id, entry)
 
               if err != nil{
-                panic("update error")
+                //panic("update error")
                 out[ index ] <-  Result{ Account: account, Result: "update error"}
               }
               countWithdraw += 1
