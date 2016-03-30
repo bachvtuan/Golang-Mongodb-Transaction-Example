@@ -30,7 +30,7 @@ type Currency struct {
 }
 
 var countWithdraw = 0
-var maxUser = 10
+var maxUser = 100
 var in chan string
 var out chan Result
 
@@ -63,7 +63,7 @@ func withdraw(w http.ResponseWriter, r *http.Request) {
           return          
         }else{
           fmt.Printf("Dismatch: %s and %s\n", result.Account, account)
-          panic("why ?, Something want wrong")
+          panic("why ?, Something went wrong")
           //push to out again
           out <- result
         }
@@ -108,7 +108,8 @@ func main() {
           fmt.Printf("count_queue %d\n", count_queue)*/
           entry := Currency{}
           err := global_db.C("bank").Find(bson.M{"account":  account }).One(&entry)
-          
+
+          //time.Sleep(100 * time.Millisecond)
 
           if err != nil {
             panic(err)
@@ -142,3 +143,4 @@ func main() {
   http.HandleFunc("/", withdraw)
   http.ListenAndServe(":8000", nil)
 }
+

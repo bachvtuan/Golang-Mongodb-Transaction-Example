@@ -1,6 +1,6 @@
 # Golang-Mongodb-Transaction-Example
 
-Mongodb is good at read,write performance however it's lack of transaction unlike Sql database. However, We can fix it by using Golang we make sure read or write a row by single thread at the same time.
+Mongodb is good at read,write performance however it's lack of transaction unlike Sql database. However, We can fix it by using Golang we make sure read or write a row by single thread at the same time. I see they have already written the document how to handle transaction by using code [here](https://docs.mongodb.org/manual/tutorial/perform-two-phase-commits/) but it's too complicated and hard to implement so it take a lot of time too.
 
 
 This is included examples to guide how to make transaction on Mongodb by using programming language layer is Golang.
