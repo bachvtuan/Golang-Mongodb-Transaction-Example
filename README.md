@@ -50,13 +50,24 @@ ab -n 500 -c 100 http://localhost:8000/
 ```
 I want to create 500 requests and there are 100 requests happend at the same time.
 
+## Alternative method:
+
+This method can be applied for other programming language. The idea is we should implement queue for it.
+
+Each payment is processed one by one.Take a look at queue_code.go. I have implemented 2 channels. The first one is input channel and other one is output channel.
+
+
 **Result :**
 
 _**Unsafe code:**_
 I can withdraw 500 times without any error, so actuall the money I will get is 500 * 50 = 25000USD meanwhile previous my balance is 1000USD.
 
 _**Safe code:**_
-I can withdraw 20 times, Remain requests will be shown "out_of_balance". That's what we want.
+I can withdraw 20 times, Remain requests will be shown "out_of_balance". I watched the console log and see the result as expected.
+
+_**Queue method:**_
+
+I generated 10 accounts, each account has 1000USD. The the maxinum successful withdraw times are 200 ( 20/user * 10 ). I watched the console log and see the result as expected too.
 
 
 ## Benmarch log
@@ -139,6 +150,47 @@ Percentage of the requests served within a certain time (ms)
   99%     80
  100%     97 (longest request)
 ```
+
+**_Queue method code:_**
+```
+Server Software:        
+Server Hostname:        localhost
+Server Port:            8000
+
+Document Path:          /
+Document Length:        16 bytes
+
+Concurrency Level:      100
+Time taken for tests:   0.172 seconds
+Complete requests:      500
+Failed requests:        491
+   (Connect: 0, Receive: 0, Length: 491, Exceptions: 0)
+Total transferred:      66192 bytes
+HTML transferred:       7692 bytes
+Requests per second:    2910.68 [#/sec] (mean)
+Time per request:       34.356 [ms] (mean)
+Time per request:       0.344 [ms] (mean, across all concurrent requests)
+Transfer rate:          376.30 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   1.6      0       6
+Processing:     4   31  14.5     29      71
+Waiting:        4   31  14.5     29      71
+Total:         10   32  15.2     30      73
+
+Percentage of the requests served within a certain time (ms)
+  50%     30
+  66%     35
+  75%     36
+  80%     44
+  90%     59
+  95%     65
+  98%     69
+  99%     71
+ 100%     73 (longest request)
+```
+
 
 ## References:
 
