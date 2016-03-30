@@ -65,7 +65,7 @@ func withdraw(w http.ResponseWriter, r *http.Request) {
           fmt.Printf("Dismatch: %s and %s\n", result.Account, account)
           panic("why ?, Something went wrong")
           //push to out again
-          out <- result
+          //out <- result
         }
 
       };
