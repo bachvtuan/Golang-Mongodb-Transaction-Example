@@ -30,8 +30,9 @@ type Currency struct {
   Code   string `bson:"code"`
 }
 
+
 var countWithdraw = 0
-var maxUser = 10
+var maxUser = 100
 var maxThread = 10
 
 //Array of channels input and output
@@ -54,13 +55,9 @@ func withdraw(w http.ResponseWriter, r *http.Request) {
 
   //Allocate to appropriate channel number based on number by get the last number in the random number.
   channelNumber :=  number % maxThread
-  /*if channelNumber == 0{
-    channelNumber = 10
-  }*/
-  account := "user" + strconv.Itoa( Random( 1, maxUser ) )
+  account := "user" + strconv.Itoa( number )
   
   go func () {
-
     
     in[ channelNumber ] <- account
     for {
@@ -111,6 +108,7 @@ func main() {
 
   //make sure it is empty first
   global_db.C("bank").DropCollection()
+  global_db.C("log").DropCollection()
 
   //Init maxUser with amount are 1000USD.
   for i := 1; i <= maxUser; i++ {
@@ -154,7 +152,7 @@ func main() {
               
             }else{
               //step 3: subtract current balance and update back to database
-              entry.Amount = entry.Amount - 50.000
+              entry.Amount = entry.Amount - 50.00
               err = global_db.C("bank").UpdateId(entry.Id, entry)
 
               if err != nil{
@@ -162,12 +160,12 @@ func main() {
                 out[ index ] <-  Result{ Account: account, Result: "update error"}
               }
               
-              mu.Lock()
+              //mu.Lock()
               countWithdraw = countWithdraw + 1
               
               fmt.Printf("countWithdraw %d\n", countWithdraw)
               
-              mu.Unlock()
+              //mu.Unlock()
 
               out[ index ] <-  Result{ Account: account, Result: fmt.Sprintf("countWithdraw %d\n", countWithdraw)}
             }

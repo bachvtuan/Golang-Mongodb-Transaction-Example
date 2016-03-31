@@ -57,7 +57,7 @@ This method can be applied for other programming language. The idea is we should
 
 Each payment is processed one by one.Take a look at queue_code.go. I have implemented 2 channels. The first one is input channel and other one is output channel.
 
-### Concurrency queue ( multiple_threads_queue_code.go )
+### Multiple queues ( multiple_queue_code.go )
 By using above method, I use single queue, and now let expland by using multiple queue will make server response faster. To do this, I generated N users in system. Each user need belong only 1 queue by your rule.
 
 **For example:**
@@ -71,20 +71,20 @@ I have 100 users and there are 10( Q ) queues are listening are numbered from 0 
 
 ## Result :
 
-_**Unsafe code:**_
+_**Unsafe code( Not passed ):**_
 I can withdraw 1653 times without any error, so actuall the money I will get is 1653 * 50 = 82650USD. This is serious problem because my previous balance only 1000USD.
 
-_**Safe code:**_
+_**Safe code( Passed ):**_
 I can withdraw 20 times, Remain requests will be shown "out_of_balance". I watched the console log and see the result as expected ( Good job ).
 
-_**Queue method:**_
+_**Queue( Passed ):**_
 Unlike above methods, we should simulate multiple users for system to test the result don't messed between users. I generated 100 accounts, each account has 1000USD. The the maxinum successful withdraw times are 2000 ( 20/user * 100 ). I watched the console log and see the result as epxectation too.
 
-_**Multiple Queue method:**_
-The same behaviour with Queue method but There are 10 queues are listening. But countWidthdraw is incorrect with value is 2056 or some value around here. Will be investigate
+_**Multiple Queues( Passed ):**_
+The same behaviour with Queue method but There are N queues are listening so the execution time is shorter than singlular queue. I believe this way is the best. Look at the time taken in the benchmark log.
 
 
-## Benmarch log
+## Benchmark log
 
 **_Unsafe code:_**
 ```
